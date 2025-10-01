@@ -23,6 +23,8 @@ public class TravelBuddyDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
+    public DbSet<Destinations.Destination> Destinations { get; set; }
+
 
     #region Entities from the modules
 
@@ -71,6 +73,24 @@ public class TravelBuddyDbContext :
         builder.ConfigureBlobStoring();
         
         /* Configure your own tables/entities inside here */
+        builder.Entity<Destinations.Destination>(b =>
+        {
+            b.ToTable(TravelBuddyConsts.DbTablePrefix + "Destinations", TravelBuddyConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Nombre).IsRequired().HasMaxLength(200);
+            b.Property(x => x.Descripcion).HasMaxLength(1000);
+            b.Property(x => x.Ubicacion).HasMaxLength(500);
+            b.Property(x => x.Precio).HasColumnType("decimal(18,2)");
+            b.Property(x => x.ImagenUrl).HasMaxLength(1000);
+            b.Property(x => x.Disponible).IsRequired();
+            b.Property(x => x.FechaCreacion).IsRequired();
+            b.Property(x => x.FechaActualizacion).IsRequired();
+            /*b.HasMany(x => x.Reservas).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
+            /*b.HasMany(x => x.Comentarios).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
+            /*b.HasMany(x => x.Calificaciones).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
+            // Configure other properties and relationships as needed
+        });
+
 
         //builder.Entity<YourEntity>(b =>
         //{
