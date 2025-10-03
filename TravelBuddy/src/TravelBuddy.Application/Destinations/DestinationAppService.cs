@@ -10,11 +10,12 @@ namespace TravelBuddy.Destinations
 {
     public class DestinationAppService :
             CrudAppService<
-                Destination,
-                DestinationDto,
-                Guid,
-                Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,
-                IDestinationAppService>
+                Destination,   // entidad
+                DestinationDto, //DTO que devuelve 
+                Guid,       // tipo de clave primaria 
+                Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,  // para listar con paginacion 
+                 //CreateUpdateDestinationDto>, // DTO para crear/actualizar
+                IDestinationAppService // interfaz para implementar  
     {
         public DestinationAppService(IRepository<Destination, Guid> repository)
             : base(repository)

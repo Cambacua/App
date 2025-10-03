@@ -24,14 +24,16 @@ namespace TravelBuddy.Destinations
 
         /*public List<Calificacion> Calificaciones { get; set; }*/
 
-        /*public Destination()
-        {
-            Reservas = new List<Reserva>();
-            Comentarios = new List<Comentario>();
-            Calificaciones = new List<Calificacion>();
-        }
-        */
 
+        // el chat te pide que tengas esta clase  sin parametros 
+      /*  public Destination()
+        {
+            FechaCreacion= DateTime.UtcNow;  // feha  actual del sistema 
+            FechaActualizacion = DateTime.UtcNow;
+            Disponible = true;
+        }
+        
+        */
         public Destination(Guid id, string nombre, string descripcion, string ubicacion, decimal precio, string imagenUrl, bool disponible, Guid categoriaId)
             : base(id)
         {

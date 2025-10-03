@@ -26,7 +26,7 @@ namespace TravelBuddy.Destination
 
         [Fact]
 
-        public async Task CreateAsync_ShouldReturnCreateDestinationDTo()
+        public async Task CreateAsyncShouldReturnCreateDestinationDTo()
         {
             //Arrange (preparaciond del test)
             var input = new CreateUpdateDestinationDto
