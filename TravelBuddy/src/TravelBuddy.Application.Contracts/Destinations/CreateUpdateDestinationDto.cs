@@ -8,11 +8,12 @@ namespace TravelBuddy.Destinations
 {
     public class CreateUpdateDestinationDto
     {
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public string Ubicacion { get; set; }
-        public decimal Precio { get; set; }
-        public string ImagenUrl { get; set; }
+        public required string Nombre { get; set; }
+        public required string Pais { get; set; }
+        public required string Descripcion { get; set; }
+        public required string Ubicacion { get; set; }
+        //public decimal Precio { get; set; }
+        public required string ImagenUrl { get; set; }
         public bool Disponible { get; set; }
         public Guid CategoriaId { get; set; }
     }
