@@ -83,11 +83,6 @@ public class TravelBuddyDbContext :
             b.Property(x => x.Precio).HasColumnType("decimal(18,2)");
             b.Property(x => x.ImagenUrl).HasMaxLength(1000);
             b.Property(x => x.Disponible).IsRequired();
-            b.Property(x => x.FechaCreacion).IsRequired();
-            b.Property(x => x.FechaActualizacion).IsRequired();
-            /*b.HasMany(x => x.Reservas).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
-            /*b.HasMany(x => x.Comentarios).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
-            /*b.HasMany(x => x.Calificaciones).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
             // Configure other properties and relationships as needed
         });
 

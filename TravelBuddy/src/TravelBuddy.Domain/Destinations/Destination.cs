@@ -12,14 +12,11 @@ namespace TravelBuddy.Destinations
         public decimal Precio { get; set; }
         public string ImagenUrl { get; set; }
         public bool Disponible { get; set; }
-        public DateTime FechaCreacion { get; set; }
-        public DateTime FechaActualizacion { get; set; }
         public Guid CategoriaId { get; set; }
 
+        //Constructor por defecto requerido por EF
         public Destination()
         {
-            FechaCreacion = DateTime.UtcNow;
-            FechaActualizacion = DateTime.UtcNow;
             Disponible = true;
         }
 
@@ -33,8 +30,6 @@ namespace TravelBuddy.Destinations
             ImagenUrl = imagenUrl;
             Disponible = disponible;
             CategoriaId = categoriaId;
-            FechaCreacion = DateTime.UtcNow;
-            FechaActualizacion = DateTime.UtcNow;
         }
     }
 }

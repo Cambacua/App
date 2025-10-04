@@ -21,6 +21,8 @@ namespace TravelBuddy.Destinations
         [Required]
         public string Ubicacion { get; set; }
 
+        public decimal Precio { get; set; }
+
         [Required]
         public string ImagenUrl { get; set; }
 
