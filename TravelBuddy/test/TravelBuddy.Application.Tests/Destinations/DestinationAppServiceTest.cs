@@ -22,6 +22,7 @@ namespace TravelBuddy.Destination
         protected DestinationAppServiceTest()
         {
             _service = GetRequiredService<IDestinationAppService>();
+            _destinationRepository = GetRequiredService<IRepository<TravelBuddy.Destinations.Destination, Guid>>();
         }
 
         [Fact]

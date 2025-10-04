@@ -14,7 +14,7 @@ namespace TravelBuddy.Destinations
                 DestinationDto, //DTO que devuelve 
                 Guid,       // tipo de clave primaria 
                 Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,  // para listar con paginacion 
-                 //CreateUpdateDestinationDto>, // DTO para crear/actualizar
+                CreateUpdateDestinationDto>, // DTO para crear/actualizar
                 IDestinationAppService // interfaz para implementar  
     {
         public DestinationAppService(IRepository<Destination, Guid> repository)
