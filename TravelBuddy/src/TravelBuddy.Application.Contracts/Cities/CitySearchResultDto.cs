@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TravelBuddy.Cities
 {
-    public interface ICitySearchService
+    public class CitySearchResultDto
     {
-        Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request);
+        public List<CityDto> Cities { get; set; } = new();
     }
 }
