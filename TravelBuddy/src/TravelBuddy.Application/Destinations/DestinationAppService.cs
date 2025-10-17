@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TravelBuddy.Cities;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Users;
 
 namespace TravelBuddy.Destinations
 {
@@ -17,6 +18,7 @@ namespace TravelBuddy.Destinations
            Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,IDestinationAppService>
     {
         private readonly ICitySearchService _citySearchService;
+        private readonly ICurrentUser _currentUser;
 
         public DestinationAppService(
             IRepository<Destination, Guid> repository,
@@ -28,6 +30,7 @@ namespace TravelBuddy.Destinations
 
         public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
         {
+            var user = _currentUser;
             return await _citySearchService.SearchCitiesByNameAsync(request);
         }
     }

@@ -14,7 +14,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="8.7.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\berto\Source\repos\App\TravelBuddy\test\TravelBuddy.Application.Tests\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\berto\Source\repos\App\TravelBuddy\test\TravelBuddy.Application.Tests\.editorconfig" />
   </ItemGroup>
 
 </Project>
