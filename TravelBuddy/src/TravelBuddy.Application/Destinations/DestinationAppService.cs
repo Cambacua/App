@@ -1,20 +1,21 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
+
 namespace TravelBuddy.Destinations
 {
+    [Authorize]
     public class DestinationAppService :
-            CrudAppService<
-                Destination,
-                DestinationDto,
-                Guid,
-                Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,
-                IDestinationAppService>
+        CrudAppService<Destination, DestinationDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateDestinationDto>,
+        IDestinationAppService
+
     {
         private readonly IRepository<DestinationRating, Guid> _ratingRepository;
         public DestinationAppService(IRepository<Destination, Guid> repository,
@@ -34,6 +35,18 @@ namespace TravelBuddy.Destinations
             if (CurrentUser.Id == null)
             {
                 throw new UnauthorizedAccessException("Usuario no autenticado");
+            }
+
+            var existing = await _ratingRepository.FirstOrDefaultAsync(
+            r => r.DestinationId == input.DestinationId && r.UserId == CurrentUser.Id.Value);
+
+            if (existing != null)
+
+            {
+                existing.Calificacion = input.Calificacion;
+                existing.Comentario = input.Comentario;
+                await _ratingRepository.UpdateAsync(existing);
+                return ObjectMapper.Map<DestinationRating, DestinationRatingDto>(existing);
             }
             // Crear nueva calificación
             var rating = new DestinationRating

@@ -16,7 +16,7 @@ namespace TravelBuddy.Destinations
         public int Calificacion { get; set; }
         //public string Calificacion { get; set; }
         [StringLength(500)]
-        public string Comentario { get; set; }
+        public string? Comentario { get; set; }
 
 
     }

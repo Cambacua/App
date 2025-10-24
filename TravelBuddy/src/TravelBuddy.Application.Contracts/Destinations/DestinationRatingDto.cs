@@ -9,7 +9,7 @@ namespace TravelBuddy.Destinations
 {
     public class DestinationRatingDto: EntityDto<Guid>
     {
-        public string Calificacion { get; set; }
+        public int Calificacion { get; set; }
         public string Comentario { get; set; }
         public Guid DestinationId { get; set; }  // Para saber a qué destino pertenece
         public Guid UserId { get; set; }         // Para el filtro automático IUserOwned
