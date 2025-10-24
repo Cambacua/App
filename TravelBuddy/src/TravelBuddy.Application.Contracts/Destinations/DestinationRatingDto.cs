@@ -11,8 +11,7 @@ namespace TravelBuddy.Destinations
     {
         public string Calificacion { get; set; }
         public string Comentario { get; set; }
-
-        //public Guid DestinationId { get; set; }
-        //public Guid UserId { get; set; }
+        public Guid DestinationId { get; set; }  // Para saber a qué destino pertenece
+        public Guid UserId { get; set; }         // Para el filtro automático IUserOwned
     }
 }
