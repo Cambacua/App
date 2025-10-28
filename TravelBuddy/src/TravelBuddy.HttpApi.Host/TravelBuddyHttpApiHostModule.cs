@@ -39,6 +39,10 @@ using Volo.Abp.OpenIddict;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 namespace TravelBuddy;
 
@@ -50,13 +54,13 @@ namespace TravelBuddy;
     typeof(AbpAspNetCoreMultiTenancyModule),
     typeof(TravelBuddyApplicationModule),
     typeof(TravelBuddyEntityFrameworkCoreModule),
-    typeof(AbpAccountWebOpenIddictModule),
+   // typeof(AbpAccountWebOpenIddictModule),
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule)
     )]
 public class TravelBuddyHttpApiHostModule : AbpModule
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
+   /* public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
@@ -84,14 +88,14 @@ public class TravelBuddyHttpApiHostModule : AbpModule
                 serverBuilder.SetIssuer(new Uri(configuration["AuthServer:Authority"]!));
             });
         }
-    }
+    } */
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        if (!configuration.GetValue<bool>("App:DisablePII"))
+        /*if (!configuration.GetValue<bool>("App:DisablePII"))
         {
             Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
             Microsoft.IdentityModel.Logging.IdentityModelEventSource.LogCompleteSecurityArtifact = true;
@@ -108,26 +112,45 @@ public class TravelBuddyHttpApiHostModule : AbpModule
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
-        }
+        }*/
 
-        ConfigureAuthentication(context);
+        ConfigureAuthentication(context, configuration);
         ConfigureUrls(configuration);
         ConfigureBundles();
         ConfigureConventionalControllers();
         ConfigureHealthChecks(context);
-        ConfigureSwagger(context, configuration);
+        ConfigureSwagger(context);
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
     }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context)
+    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
-        {
-            options.IsDynamicClaimsEnabled = true;
-        });
+
+        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]))
+                };
+            });
+                
     }
+
+            /*context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+             context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
+             {
+                 options.IsDynamicClaimsEnabled = true;
+             });*/
+       
 
     private void ConfigureUrls(IConfiguration configuration)
     {
@@ -187,21 +210,55 @@ public class TravelBuddyHttpApiHostModule : AbpModule
         });
     }
 
-    private static void ConfigureSwagger(ServiceConfigurationContext context, IConfiguration configuration)
+    /* private static void ConfigureSwagger(ServiceConfigurationContext context, IConfiguration configuration)
+     {
+         context.Services.AddAbpSwaggerGenWithOidc(
+             configuration["AuthServer:Authority"]!,
+             ["TravelBuddy"],
+             [AbpSwaggerOidcFlows.AuthorizationCode],
+             null,
+             options =>
+             {
+                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelBuddy API", Version = "v1" });
+                 options.DocInclusionPredicate((docName, description) => true);
+                 options.CustomSchemaIds(type => type.FullName);
+             });
+     }
+    */
+    private static void ConfigureSwagger(ServiceConfigurationContext context)
     {
-        context.Services.AddAbpSwaggerGenWithOidc(
-            configuration["AuthServer:Authority"]!,
-            ["TravelBuddy"],
-            [AbpSwaggerOidcFlows.AuthorizationCode],
-            null,
-            options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelBuddy API", Version = "v1" });
-                options.DocInclusionPredicate((docName, description) => true);
-                options.CustomSchemaIds(type => type.FullName);
-            });
-    }
+        context.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelBuddy API", Version = "v1" });
+            options.DocInclusionPredicate((docName, description) => true);
+            options.CustomSchemaIds(type => type.FullName);
 
+            // Configurar JWT en Swagger
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme.",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] {}
+            }
+        });
+        });
+    }
     private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
     {
         context.Services.AddCors(options =>
@@ -254,7 +311,7 @@ public class TravelBuddyHttpApiHostModule : AbpModule
         app.UseAbpSecurityHeaders();
         app.UseCors();
         app.UseAuthentication();
-        app.UseAbpOpenIddictValidation();
+       // app.UseAbpOpenIddictValidation();
 
         if (MultiTenancyConsts.IsEnabled)
         {
@@ -271,7 +328,7 @@ public class TravelBuddyHttpApiHostModule : AbpModule
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "TravelBuddy API");
 
             var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
-            options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+           // options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
         });
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
