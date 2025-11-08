@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
+
 namespace TravelBuddy.Destinations
 {
     public interface IDestinationRatingRepository: IRepository<DestinationRating, Guid>

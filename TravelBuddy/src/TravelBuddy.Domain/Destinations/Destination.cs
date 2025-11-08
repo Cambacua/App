@@ -16,23 +16,23 @@ namespace TravelBuddy.Destinations
         public string ImagenUrl { get; set; }
         public bool Disponible { get; set; }
         public DateTime FechaCreacion { get; set; }
-        public DateTime FechaActualizacion { get; set; }
-        public Guid CategoriaId { get; set; }
+         public DateTime FechaActualizacion { get; set; }
+        //  public Guid CategoriaId { get; set; }
         /*public Categoria Categoria { get; set; }*/
         /*public List<Reserva> Reservas { get; set; }*/
         /*public List<Comentario> Comentarios { get; set; }*/
 
         /*public List<Calificacion> Calificaciones { get; set; }*/
 
-        /*public Destination()
-        {
-            Reservas = new List<Reserva>();
-            Comentarios = new List<Comentario>();
-            Calificaciones = new List<Calificacion>();
-        }
-        */
+        public Destination() { }
+        /*
+              Reservas = new List<Reserva>();
+              Comentarios = new List<Comentario>();
+              Calificaciones = new List<Calificacion>();
+          }
+          */
 
-        public Destination(Guid id, string nombre, string descripcion, string ubicacion, decimal precio, string imagenUrl, bool disponible, Guid categoriaId)
+        public Destination(Guid id, string nombre, string descripcion, string ubicacion, decimal precio, string imagenUrl, bool disponible)
             : base(id)
         {
             Nombre = nombre;
@@ -41,7 +41,7 @@ namespace TravelBuddy.Destinations
             Precio = precio;
             ImagenUrl = imagenUrl;
             Disponible = disponible;
-            CategoriaId = categoriaId;
+           // CategoriaId = categoriaId;
             FechaCreacion = DateTime.UtcNow;
             FechaActualizacion = DateTime.UtcNow;
             /*Reservas = new List<Reserva>();*/

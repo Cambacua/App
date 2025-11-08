@@ -1,337 +1,247 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Extensions.DependencyInjection;
-using OpenIddict.Validation.AspNetCore;
-using OpenIddict.Server.AspNetCore;
-using TravelBuddy.EntityFrameworkCore;
-using TravelBuddy.MultiTenancy;
-using TravelBuddy.HealthChecks;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using TravelBuddy.EntityFrameworkCore;
+using TravelBuddy.HealthChecks;
+using TravelBuddy.MultiTenancy;
 using Volo.Abp;
-using Volo.Abp.Studio;
-using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
+using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
-using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
+using Volo.Abp.Studio.Client.AspNetCore;
+using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
-using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
-using Microsoft.AspNetCore.Hosting;
-using Volo.Abp.AspNetCore.Serilog;
-using Volo.Abp.Identity;
-using Volo.Abp.OpenIddict;
-using Volo.Abp.Swashbuckle;
-using Volo.Abp.Studio.Client.AspNetCore;
-using Volo.Abp.Security.Claims;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
-
-namespace TravelBuddy;
-
-[DependsOn(
-    typeof(TravelBuddyHttpApiModule),
-    typeof(AbpStudioClientAspNetCoreModule),
-    typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
-    typeof(AbpAutofacModule),
-    typeof(AbpAspNetCoreMultiTenancyModule),
-    typeof(TravelBuddyApplicationModule),
-    typeof(TravelBuddyEntityFrameworkCoreModule),
-   // typeof(AbpAccountWebOpenIddictModule),
-    typeof(AbpSwashbuckleModule),
-    typeof(AbpAspNetCoreSerilogModule)
-    )]
-public class TravelBuddyHttpApiHostModule : AbpModule
+namespace TravelBuddy
 {
-   /* public override void PreConfigureServices(ServiceConfigurationContext context)
+   
+    [DependsOn(typeof(TravelBuddyHttpApiModule),
+        typeof(AbpStudioClientAspNetCoreModule), 
+        typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
+        typeof(AbpAutofacModule), 
+        typeof(AbpAspNetCoreMultiTenancyModule),
+        typeof(TravelBuddyApplicationModule), 
+        typeof(TravelBuddyEntityFrameworkCoreModule),
+        typeof(AbpAccountWebOpenIddictModule),
+        typeof(AbpSwashbuckleModule),
+        typeof(AbpAspNetCoreSerilogModule))]
+
+    public class TravelBuddyHttpApiHostModule : AbpModule
     {
-        var hostingEnvironment = context.Services.GetHostingEnvironment();
-        var configuration = context.Services.GetConfiguration();
-
-        PreConfigure<OpenIddictBuilder>(builder =>
+        public override void PreConfigureServices(ServiceConfigurationContext context)
         {
-            builder.AddValidation(options =>
-            {
-                options.AddAudiences("TravelBuddy");
-                options.UseLocalServer();
-                options.UseAspNetCore();
-            });
-        });
+            var configuration = context.Services.GetConfiguration();
+            var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        if (!hostingEnvironment.IsDevelopment())
-        {
-            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
-            {
-                options.AddDevelopmentEncryptionAndSigningCertificate = false;
-            });
-
-            PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
-            {
-                serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", configuration["AuthServer:CertificatePassPhrase"]!);
-                serverBuilder.SetIssuer(new Uri(configuration["AuthServer:Authority"]!));
-            });
-        }
-    } */
-
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        var configuration = context.Services.GetConfiguration();
-        var hostingEnvironment = context.Services.GetHostingEnvironment();
-
-        /*if (!configuration.GetValue<bool>("App:DisablePII"))
-        {
-            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
-            Microsoft.IdentityModel.Logging.IdentityModelEventSource.LogCompleteSecurityArtifact = true;
-        }
-
-        if (!configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata"))
-        {
-            Configure<OpenIddictServerAspNetCoreOptions>(options =>
-            {
-                options.DisableTransportSecurityRequirement = true;
-            });
             
-            Configure<ForwardedHeadersOptions>(options =>
+            PreConfigure<OpenIddictBuilder>(builder =>
             {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+                builder.AddValidation(options =>
+                {
+                   
+                    options.AddAudiences("TravelBuddy");
+
+                   
+                    options.UseLocalServer();
+
+                    // Integración con ASP.NET Core
+                    options.UseAspNetCore();
+                });
             });
-        }*/
 
-        ConfigureAuthentication(context, configuration);
-        ConfigureUrls(configuration);
-        ConfigureBundles();
-        ConfigureConventionalControllers();
-        ConfigureHealthChecks(context);
-        ConfigureSwagger(context);
-        ConfigureVirtualFileSystem(context);
-        ConfigureCors(context, configuration);
-    }
-
-    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-
-        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+           
+            PreConfigure<OpenIddictServerBuilder>(builder =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+              
+                builder.SetTokenEndpointUris("/connect/token");
+
+              
+                builder.AllowPasswordFlow()
+                       .AcceptAnonymousClients(); 
+
+                builder.UseAspNetCore()
+                       .EnableTokenEndpointPassthrough();
+
+               
+                builder.DisableAccessTokenEncryption();
+
+                if (hostingEnvironment.IsDevelopment())
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    ValidAudience = configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]))
-                };
-            });
-                
-    }
-
-            /*context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-             context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
-             {
-                 options.IsDynamicClaimsEnabled = true;
-             });*/
-       
-
-    private void ConfigureUrls(IConfiguration configuration)
-    {
-        Configure<AppUrlOptions>(options =>
-        {
-            options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
-            options.Applications["Angular"].RootUrl = configuration["App:AngularUrl"];
-            options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
-            options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>());
-        });
-    }
-
-    private void ConfigureBundles()
-    {
-        Configure<AbpBundlingOptions>(options =>
-        {
-            options.StyleBundles.Configure(
-                LeptonXLiteThemeBundles.Styles.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-styles.css");
+                   
+                    builder.AddDevelopmentEncryptionCertificate()
+                           .AddDevelopmentSigningCertificate();
                 }
-            );
-
-            options.ScriptBundles.Configure(
-                LeptonXLiteThemeBundles.Scripts.Global,
-                bundle =>
+                else
                 {
-                    bundle.AddFiles("/global-scripts.js");
+                 
                 }
-            );
-        });
-    }
-
-
-    private void ConfigureVirtualFileSystem(ServiceConfigurationContext context)
-    {
-        var hostingEnvironment = context.Services.GetHostingEnvironment();
-
-        if (hostingEnvironment.IsDevelopment())
-        {
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
-                options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Domain"));
-                options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Application"));
             });
         }
-    }
 
-    private void ConfigureConventionalControllers()
-    {
-        Configure<AbpAspNetCoreMvcOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            options.ConventionalControllers.Create(typeof(TravelBuddyApplicationModule).Assembly);
-        });
-    }
+            var configuration = context.Services.GetConfiguration();
 
-    /* private static void ConfigureSwagger(ServiceConfigurationContext context, IConfiguration configuration)
-     {
-         context.Services.AddAbpSwaggerGenWithOidc(
-             configuration["AuthServer:Authority"]!,
-             ["TravelBuddy"],
-             [AbpSwaggerOidcFlows.AuthorizationCode],
-             null,
-             options =>
-             {
-                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelBuddy API", Version = "v1" });
-                 options.DocInclusionPredicate((docName, description) => true);
-                 options.CustomSchemaIds(type => type.FullName);
-             });
-     }
-    */
-    private static void ConfigureSwagger(ServiceConfigurationContext context)
-    {
-        context.Services.AddSwaggerGen(options =>
+            ConfigureUrls(configuration);
+            ConfigureCors(context, configuration);
+            ConfigureSwagger(context, configuration);
+
+          
+            ConfigureVirtualFileSystem(context);
+            ConfigureHealthChecks(context);
+        }
+
+        private void ConfigureUrls(IConfiguration configuration)
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelBuddy API", Version = "v1" });
-            options.DocInclusionPredicate((docName, description) => true);
-            options.CustomSchemaIds(type => type.FullName);
-
-            // Configurar JWT en Swagger
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            Configure<AppUrlOptions>(options =>
             {
-                Description = "JWT Authorization header using the Bearer scheme.",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer"
+                options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
+                options.Applications["Angular"].RootUrl = configuration["App:AngularUrl"];
+                options.RedirectAllowedUrls.AddRange(
+                    configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>());
             });
+        }
 
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
         {
+            context.Services.AddCors(options =>
             {
-                new OpenApiSecurityScheme
+                options.AddDefaultPolicy(policy =>
                 {
-                    Reference = new OpenApiReference
+                    var origins = configuration["App:CorsOrigins"]?
+                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                        .Select(o => o.Trim().TrimEnd('/'))
+                        .ToArray() ?? Array.Empty<string>();
+
+                    policy.WithOrigins(origins)
+                          .WithAbpExposedHeaders()
+                          .SetIsOriginAllowedToAllowWildcardSubdomains()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+        }
+
+        private static void ConfigureSwagger(ServiceConfigurationContext context, IConfiguration configuration)
+        {
+            context.Services.AddAbpSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelBuddy API", Version = "v1" });
+                options.DocInclusionPredicate((docName, description) => true);
+                options.CustomSchemaIds(type => type.FullName);
+
+               
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Ingrese el token JWT en el formato: Bearer {token}",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
+                        new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
+                        Array.Empty<string>()
                     }
-                },
-                new string[] {}
-            }
-        });
-        });
-    }
-    private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        context.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(builder =>
-            {
-                builder
-                    .WithOrigins(
-                        configuration["App:CorsOrigins"]?
-                            .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                            .Select(o => o.Trim().RemovePostFix("/"))
-                            .ToArray() ?? Array.Empty<string>()
-                    )
-                    .WithAbpExposedHeaders()
-                    .SetIsOriginAllowedToAllowWildcardSubdomains()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                });
             });
-        });
-    }
-
-    private void ConfigureHealthChecks(ServiceConfigurationContext context)
-    {
-        context.Services.AddTravelBuddyHealthChecks();
-    }
-
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
-    {
-        var app = context.GetApplicationBuilder();
-        var env = context.GetEnvironment();
-
-        app.UseForwardedHeaders();
-
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
         }
 
-        app.UseAbpRequestLocalization();
-
-        if (!env.IsDevelopment())
+        private void ConfigureVirtualFileSystem(ServiceConfigurationContext context)
         {
-            app.UseErrorPage();
+            var hostingEnvironment = context.Services.GetHostingEnvironment();
+
+            if (hostingEnvironment.IsDevelopment())
+            {
+                Configure<AbpVirtualFileSystemOptions>(options =>
+                {
+                    options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyDomainSharedModule>(
+                        Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Domain.Shared"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyDomainModule>(
+                        Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Domain"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyApplicationContractsModule>(
+                        Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Application.Contracts"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<TravelBuddyApplicationModule>(
+                        Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}TravelBuddy.Application"));
+                });
+            }
         }
 
-        app.UseRouting();
-        app.MapAbpStaticAssets();
-        app.UseAbpStudioLink();
-        app.UseAbpSecurityHeaders();
-        app.UseCors();
-        app.UseAuthentication();
-       // app.UseAbpOpenIddictValidation();
-
-        if (MultiTenancyConsts.IsEnabled)
+        private void ConfigureHealthChecks(ServiceConfigurationContext context)
         {
-            app.UseMultiTenancy();
+            context.Services.AddTravelBuddyHealthChecks();
         }
 
-        app.UseUnitOfWork();
-        app.UseDynamicClaims();
-        app.UseAuthorization();
-
-        app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
+        public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "TravelBuddy API");
+            var app = context.GetApplicationBuilder();
+            var env = context.GetEnvironment();
 
-            var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
-           // options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-        });
-        app.UseAuditing();
-        app.UseAbpSerilogEnrichers();
-        app.UseConfiguredEndpoints();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseAbpRequestLocalization();
+
+            app.UseRouting();
+            app.MapAbpStaticAssets();
+           
+            app.UseAbpSecurityHeaders();
+            app.UseCors();
+
+           
+            app.UseAuthentication();
+
+            
+            app.UseAbpOpenIddictValidation(); 
+
+            if (MultiTenancyConsts.IsEnabled)
+            {
+                app.UseMultiTenancy();
+            }
+
+            app.UseUnitOfWork();
+            app.UseDynamicClaims();
+            app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseAbpSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "TravelBuddy API v1");
+                // Si querés probar con OAuth2/OpenIddict en Swagger UI, configurá client aquí:
+                // var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
+                // options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+            });
+
+            app.UseAuditing();
+            app.UseAbpSerilogEnrichers();
+            app.UseConfiguredEndpoints();
+        }
     }
 }

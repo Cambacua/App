@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelBuddy.Destinations;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -9,9 +10,9 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.OpenIddict.EntityFrameworkCore;
 
 namespace TravelBuddy.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ public class TravelBuddyDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<Destinations.Destination> Destinations { get; set; }
-
+    public DbSet<DestinationRating> DestinationRatings { get; set; }
 
     #region Entities from the modules
 
@@ -87,10 +88,18 @@ public class TravelBuddyDbContext :
             b.Property(x => x.FechaActualizacion).IsRequired();
             /*b.HasMany(x => x.Reservas).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
             /*b.HasMany(x => x.Comentarios).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
-            /*b.HasMany(x => x.Calificaciones).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
+            //b.HasMany(x => x.Calificaciones).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
             // Configure other properties and relationships as needed
         });
-
+        builder.Entity<DestinationRating>(b =>
+        {
+            b.ToTable(TravelBuddyConsts.DbTablePrefix + "DestinationRatings", TravelBuddyConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Calificacion).IsRequired();
+            b.Property(x => x.Comentario).HasMaxLength(500);
+            b.Property(x => x.DestinationId).IsRequired();
+            b.Property(x => x.UserId).IsRequired();
+        });
 
         //builder.Entity<YourEntity>(b =>
         //{
