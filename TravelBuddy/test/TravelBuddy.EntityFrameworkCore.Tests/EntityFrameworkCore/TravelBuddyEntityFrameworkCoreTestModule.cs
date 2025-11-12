@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -35,6 +36,11 @@ public class TravelBuddyEntityFrameworkCoreTestModule : AbpModule
             options.IsDynamicPermissionStoreEnabled = false;
         });
         context.Services.AddAlwaysDisableUnitOfWorkTransaction();
+
+        context.Services.AddAbpDbContext<TravelBuddyDbContext>(options =>
+        {
+            options.AddDefaultRepositories(includeAllEntities: true);
+        });
 
         ConfigureInMemorySqlite(context.Services);
 

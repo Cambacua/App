@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Security.Claims;
 
 namespace TravelBuddy.Destinations
 {
@@ -16,7 +17,7 @@ namespace TravelBuddy.Destinations
         public string ImagenUrl { get; set; }
         public bool Disponible { get; set; }
         public DateTime FechaCreacion { get; set; }
-         public DateTime FechaActualizacion { get; set; }
+        public DateTime FechaActualizacion { get; set; }
         //  public Guid CategoriaId { get; set; }
         /*public Categoria Categoria { get; set; }*/
         /*public List<Reserva> Reservas { get; set; }*/
@@ -41,14 +42,14 @@ namespace TravelBuddy.Destinations
             Precio = precio;
             ImagenUrl = imagenUrl;
             Disponible = disponible;
-           // CategoriaId = categoriaId;
+            // CategoriaId = categoriaId;
             FechaCreacion = DateTime.UtcNow;
             FechaActualizacion = DateTime.UtcNow;
             /*Reservas = new List<Reserva>();*/
             /*Comentarios = new List<Comentario>();*/
             /*Calificaciones = new List<Calificacion>();*/
         }
-       
+
 
     }
 

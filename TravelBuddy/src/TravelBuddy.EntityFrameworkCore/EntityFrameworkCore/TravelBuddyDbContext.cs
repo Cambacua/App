@@ -24,7 +24,7 @@ public class TravelBuddyDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
-    public DbSet<Destinations.Destination> Destinations { get; set; }
+    public DbSet<Destination> Destinations { get; set; }
     public DbSet<DestinationRating> DestinationRatings { get; set; }
 
     #region Entities from the modules
@@ -72,9 +72,9 @@ public class TravelBuddyDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
-        builder.Entity<Destinations.Destination>(b =>
+        builder.Entity<Destination>(b =>
         {
             b.ToTable(TravelBuddyConsts.DbTablePrefix + "Destinations", TravelBuddyConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
@@ -109,3 +109,4 @@ public class TravelBuddyDbContext :
         //});
     }
 }
+
