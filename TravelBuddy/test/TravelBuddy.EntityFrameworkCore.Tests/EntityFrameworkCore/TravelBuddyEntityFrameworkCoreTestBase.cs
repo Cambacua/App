@@ -2,7 +2,7 @@
 
 namespace TravelBuddy.EntityFrameworkCore;
 
-public abstract class TravelBuddyEntityFrameworkCoreTestBase : TravelBuddyTestBase<TravelBuddyEntityFrameworkCoreTestModule>
+public abstract class TravelBuddyEntityFrameworkCoreTestBase
+    : TravelBuddyTestBase<TravelBuddyEntityFrameworkCoreTestModule>
 {
-
 }

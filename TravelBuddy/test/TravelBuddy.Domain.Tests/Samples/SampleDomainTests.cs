@@ -4,6 +4,7 @@ using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
 using Xunit;
 
+
 namespace TravelBuddy.Samples;
 
 /* This is just an example test class.

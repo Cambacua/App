@@ -1,94 +1,110 @@
-﻿using Autofac.Core;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Moq;
 using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TravelBuddy.Destinations;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
-using Volo.Abp.Testing;
 using Xunit;
-
 
 namespace TravelBuddy.Destinations
 {
-    public class DestinationIntegration_Tests : TravelBuddyTestBase<TravelBuddyEntityFrameworkCoreTestModule>
-
+    public class DestinationIntegration_Tests
     {
-        private readonly IDestinationAppService _appService;
-        private readonly ICurrentUser _currentUser;
-
-        public DestinationIntegration_Tests()
-        {
-            _appService = GetRequiredService<IDestinationAppService>();
-            _currentUser = GetRequiredService<ICurrentUser>();
-        }
-
         [Fact]
         public async Task Should_Return_Only_Current_User_Ratings()
         {
-            // Arrange: Crea dos usuarios diferentes
             var userA = Guid.NewGuid();
             var userB = Guid.NewGuid();
 
-            //Inyecta caliicaciones en el repositorio InMemory
-            var ratingRepo = GetRequiredService<Volo.Abp.Domain.Repositories.IRepository<DestinationRating, Guid>>();
+            var ratings = new List<DestinationRating>
+            {
+                new DestinationRating(Guid.NewGuid(), Guid.NewGuid(), 5, "Excelente", userA),
+                new DestinationRating(Guid.NewGuid(), Guid.NewGuid(), 2, "Malo",      userB),
+                new DestinationRating(Guid.NewGuid(), Guid.NewGuid(), 4, "Muy lindo", userA)
+            };
 
-            await ratingRepo.InsertAsync(new DestinationRating(Guid.NewGuid(), Guid.NewGuid(), 5, "Excelente", userA));
-            await ratingRepo.InsertAsync(new DestinationRating(Guid.NewGuid(), Guid.NewGuid(), 2, "Malo", userB));
-            await ratingRepo.InsertAsync(new DestinationRating(Guid.NewGuid(), Guid.NewGuid(), 4, "Muy lindo", userA));
+            var ratingRepoMock = new Mock<IRepository<DestinationRating, Guid>>();
+            ratingRepoMock
+                .Setup(r => r.GetListAsync(It.IsAny<bool>(), default))
+                .ReturnsAsync(ratings);
 
-            // Simula que el usuario actual es userA
-            ReplaceCurrentUser(userA);
+            var destinationRepoMock = new Mock<IRepository<Destination, Guid>>();
 
-            //Act
-            var result = await _appService.GetMyRatingsAsync();
+            var objectMapperMock = new Mock<IObjectMapper>();
+            objectMapperMock
+                .Setup(m => m.Map<List<DestinationRating>, List<DestinationRatingDto>>(It.IsAny<List<DestinationRating>>()))
+                .Returns<List<DestinationRating>>(list =>
+                    list.Select(r => new DestinationRatingDto
+                    {
+                        DestinationId = r.DestinationId,
+                        Calificacion = r.Calificacion,
+                        Comentario = r.Comentario,
+                        UserId = r.UserId
+                    }).ToList()
+                );
 
-            //Assert
+            var fakeUser = new FakeCurrentUser(userA);
+
+            var appService = new DestinationAppService(
+                destinationRepoMock.Object,
+                ratingRepoMock.Object,
+                fakeUser,
+                objectMapperMock.Object
+            );
+
+            var result = await appService.GetMyRatingsAsync();
+
             result.ShouldNotBeNull();
-            result.Count.ShouldBe(2); //solo los de userA
+            result.Count.ShouldBe(2);
             result.All(r => r.UserId == userA).ShouldBeTrue();
         }
 
         [Fact]
         public async Task Should_Throw_Exception_When_User_Not_Authenticated()
         {
-            //Arrange
-            ReplaceCurrentUser(null);
+            var destinationRepoMock = new Mock<IRepository<Destination, Guid>>();
+            var ratingRepoMock = new Mock<IRepository<DestinationRating, Guid>>();
+            var objectMapperMock = new Mock<IObjectMapper>();
 
-            //Act & Assert
-            await Should.ThrowAsync<UnauthorizedAccessException>(
-              () => _appService.GetMyRatingsAsync());
-        }
+            var unauthenticatedUser = new FakeCurrentUser(null);
 
-        private void ReplaceCurrentUser(Guid? userId)
-        {
-            var fakeUser = new FakeCurrentUser(userId);
-            //Usando IServiceCollection directamente y el contenedor que ya tiene
-            var serviceCollection = GetRequiredService<IServiceCollection>();
-            serviceCollection.Replace(ServiceDescriptor.Singleton<ICurrentUser>(fakeUser));
+            var appService = new DestinationAppService(
+                destinationRepoMock.Object,
+                ratingRepoMock.Object,
+                unauthenticatedUser,
+                objectMapperMock.Object
+            );
+
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(
+                () => appService.GetMyRatingsAsync());
         }
 
         private class FakeCurrentUser : ICurrentUser
         {
-            public FakeCurrentUser(Guid? userId)
+            public FakeCurrentUser(Guid? id)
             {
-                Id = userId;
+                Id = id;
             }
+
             public Guid? Id { get; }
-            public string UserName => Id.HasValue ? $"user_{Id}" : null;
-            public string Name => " ";
-            public string? SurName => null;
+            public string UserName => Id.HasValue ? $"user_{Id}" : string.Empty;
+            public string? Email => null;
             public bool IsAuthenticated => Id.HasValue;
             public string? PhoneNumber => null;
             public bool PhoneNumberVerified => false;
-            public string? Email => null;
             public bool EmailVerified => false;
+            public IReadOnlyList<System.Security.Claims.Claim> Claims => Array.Empty<System.Security.Claims.Claim>();
             public Guid? TenantId => null;
+            public Guid? ImpersonatorTenantId => null;
+            public Guid? ImpersonatorUserId => null;
+            public string? SurName => null;
+            public string? Name => null;
             public string[] Roles => Array.Empty<string>();
+
             public System.Security.Claims.Claim? FindClaim(string claimType) => null;
             public System.Security.Claims.Claim[] FindClaims(string claimType) => Array.Empty<System.Security.Claims.Claim>();
             public System.Security.Claims.Claim[] GetAllClaims() => Array.Empty<System.Security.Claims.Claim>();
