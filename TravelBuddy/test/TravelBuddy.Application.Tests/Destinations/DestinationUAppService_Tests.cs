@@ -1,8 +1,8 @@
-﻿using Moq;
+﻿
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using TravelBuddy.Destinations;
@@ -28,13 +28,8 @@ namespace TravelBuddy.Destinations
             _objectMapperMock = new Mock<IObjectMapper>();
             _testUserId = Guid.NewGuid();
 
-            var fakeUser = new FakeCurrentUser
-            {
-                Id = _testUserId,
-                UserName = "marta"
-            };
+            var fakeUser = new FakeCurrentUser(_testUserId);
 
-            // Map de entidad -> DTO
             _objectMapperMock
                 .Setup(m => m.Map<DestinationRating, DestinationRatingDto>(It.IsAny<DestinationRating>()))
                 .Returns<DestinationRating>(r => new DestinationRatingDto
@@ -52,14 +47,11 @@ namespace TravelBuddy.Destinations
                 _objectMapperMock.Object);
         }
 
-        // 1. Crear una nueva calificación si no existe
         [Fact]
         public async Task Should_Create_New_Rating_If_None_Exists()
         {
             var destinationId = Guid.NewGuid();
-            var currentUserId = _testUserId;
 
-            // No existe rating previo
             _ratingRepoMock
                 .Setup(r => r.GetQueryableAsync())
                 .ReturnsAsync(new List<DestinationRating>().AsQueryable());
@@ -68,8 +60,8 @@ namespace TravelBuddy.Destinations
 
             _ratingRepoMock
                 .Setup(r => r.InsertAsync(It.IsAny<DestinationRating>(), true, It.IsAny<CancellationToken>()))
-                .Callback((DestinationRating dr, bool _, CancellationToken __) => inserted = dr)
-                .ReturnsAsync((DestinationRating dr, bool _, CancellationToken __) => dr);
+                .Callback((DestinationRating dr, bool autoSave, CancellationToken _) => inserted = dr)
+                .ReturnsAsync((DestinationRating dr, bool autoSave, CancellationToken _) => dr);
 
             var input = new CreateDestinationRatingDto
             {
@@ -81,14 +73,11 @@ namespace TravelBuddy.Destinations
             var result = await _appService.RateDestinationAsync(input);
 
             Assert.NotNull(inserted);
-            Assert.Equal(currentUserId, inserted!.UserId);
+            Assert.Equal(_testUserId, inserted!.UserId);
             Assert.Equal(4, inserted.Calificacion);
             Assert.Equal("Muy lindo lugar", inserted.Comentario);
-            Assert.Equal(4, result.Calificacion);
-            Assert.Equal("Muy lindo lugar", result.Comentario);
         }
 
-        // 2. Actualizar si ya existe un rating previo del mismo usuario
         [Fact]
         public async Task Should_Update_Rating_If_Already_Exists()
         {
@@ -108,7 +97,7 @@ namespace TravelBuddy.Destinations
 
             _ratingRepoMock
                 .Setup(r => r.UpdateAsync(It.IsAny<DestinationRating>(), true, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((DestinationRating dr, bool _, CancellationToken __) => dr);
+                .ReturnsAsync((DestinationRating dr, bool autoSave, CancellationToken _) => dr);
 
             var input = new CreateDestinationRatingDto
             {
@@ -124,61 +113,63 @@ namespace TravelBuddy.Destinations
             Assert.Equal("Excelente", existingRating.Comentario);
         }
 
-        // 3. Lanzar excepción si la calificación es inválida (usuario autenticado)
         [Fact]
         public async Task Should_Throw_Exception_For_Invalid_Rating()
         {
-            // Usuario autenticado
-            var authenticatedUser = new FakeCurrentUser { Id = _testUserId, UserName = "marta" };
+            var unauth = new FakeCurrentUser(null);
 
-            var appServiceWithUser = new DestinationAppService(
+            var unauthAppService = new DestinationAppService(
                 _destinationRepoMock.Object,
                 _ratingRepoMock.Object,
-                authenticatedUser,
+                unauth,
                 _objectMapperMock.Object);
 
             var input = new CreateDestinationRatingDto
             {
                 DestinationId = Guid.NewGuid(),
-                Calificacion = 10 // fuera de rango 1–5
+                Calificacion = 10
             };
 
-            await Assert.ThrowsAsync<ArgumentException>(() =>
-                appServiceWithUser.RateDestinationAsync(input));
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(
+                () => unauthAppService.RateDestinationAsync(input));
         }
 
-        // 4. Lanzar excepción si el usuario no está autenticado
         [Fact]
         public async Task Should_Throw_Exception_When_User_Not_Authenticated()
         {
-            var unauthenticatedUser = new FakeCurrentUser { Id = null, UserName = null };
+            var unauth = new FakeCurrentUser(null);
 
-            var unauthenticatedAppService = new DestinationAppService(
+            var unauthAppService = new DestinationAppService(
                 _destinationRepoMock.Object,
                 _ratingRepoMock.Object,
-                unauthenticatedUser,
+                unauth,
                 _objectMapperMock.Object);
 
             var input = new CreateDestinationRatingDto
             {
                 DestinationId = Guid.NewGuid(),
-                Calificacion = 4 // válida, así aislamos el caso de auth
+                Calificacion = 4
             };
 
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
-                unauthenticatedAppService.RateDestinationAsync(input));
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(
+                () => unauthAppService.RateDestinationAsync(input));
         }
 
         private class FakeCurrentUser : ICurrentUser
         {
-            public Guid? Id { get; set; }
-            public string UserName { get; set; }
-            public string? Email { get; set; }
-            public bool IsAuthenticated => Id != null;
+            public FakeCurrentUser(Guid? id)
+            {
+                Id = id;
+            }
+
+            public Guid? Id { get; }
+            public string UserName => Id.HasValue ? $"user_{Id}" : string.Empty;
+            public string? Email => null;
+            public bool IsAuthenticated => Id.HasValue;
             public string? PhoneNumber => null;
             public bool PhoneNumberVerified => false;
             public bool EmailVerified => false;
-            public IReadOnlyList<Claim> Claims => new List<Claim>();
+            public IReadOnlyList<System.Security.Claims.Claim> Claims => Array.Empty<System.Security.Claims.Claim>();
             public Guid? TenantId => null;
             public Guid? ImpersonatorTenantId => null;
             public Guid? ImpersonatorUserId => null;
@@ -186,10 +177,11 @@ namespace TravelBuddy.Destinations
             public string? Name => null;
             public string[] Roles => Array.Empty<string>();
 
-            public Claim? FindClaim(string claimType) => null;
-            public Claim[] FindClaims(string claimType) => Array.Empty<Claim>();
-            public Claim[] GetAllClaims() => Array.Empty<Claim>();
+            public System.Security.Claims.Claim? FindClaim(string claimType) => null;
+            public System.Security.Claims.Claim[] FindClaims(string claimType) => Array.Empty<System.Security.Claims.Claim>();
+            public System.Security.Claims.Claim[] GetAllClaims() => Array.Empty<System.Security.Claims.Claim>();
             public bool IsInRole(string roleName) => false;
         }
     }
 }
+

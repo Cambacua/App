@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.Security.Claims;
 
@@ -11,6 +7,7 @@ namespace TravelBuddy.Destinations
     public class Destination : AuditedAggregateRoot<Guid>
     {
         public string Nombre { get; set; }
+        public string Pais { get; set; }
         public string Descripcion { get; set; }
         public string Ubicacion { get; set; }
         public decimal Precio { get; set; }
@@ -52,5 +49,5 @@ namespace TravelBuddy.Destinations
 
 
     }
-
 }
+

@@ -14,7 +14,6 @@ namespace TravelBuddy.Destinations
 {
     public class DestinationIntegration_Tests
     {
-        // 1) Debe devolver solo las calificaciones del usuario actual
         [Fact]
         public async Task Should_Return_Only_Current_User_Ratings()
         {
@@ -64,7 +63,6 @@ namespace TravelBuddy.Destinations
             result.All(r => r.UserId == userA).ShouldBeTrue();
         }
 
-        // 2) Debe lanzar excepción si el usuario NO está autenticado
         [Fact]
         public async Task Should_Throw_Exception_When_User_Not_Authenticated()
         {
