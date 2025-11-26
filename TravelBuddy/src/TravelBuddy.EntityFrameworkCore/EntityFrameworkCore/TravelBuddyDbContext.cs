@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq.Expressions;
 using TravelBuddy.Destinations;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -13,6 +15,7 @@ using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
+using Volo.Abp.Users;
 
 namespace TravelBuddy.EntityFrameworkCore;
 
@@ -52,11 +55,16 @@ public class TravelBuddyDbContext :
 
     #endregion
 
-    public TravelBuddyDbContext(DbContextOptions<TravelBuddyDbContext> options)
+    private readonly ICurrentUser _currentUser;
+
+    public TravelBuddyDbContext(
+        DbContextOptions<TravelBuddyDbContext> options,
+        ICurrentUser currentUser)
         : base(options)
     {
-
+        _currentUser = currentUser;
     }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -101,12 +109,24 @@ public class TravelBuddyDbContext :
             b.Property(x => x.UserId).IsRequired();
         });
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(TravelBuddyConsts.DbTablePrefix + "YourEntities", TravelBuddyConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+        // Filtro global para todas las entidades que implementen IUserOwned
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            if (typeof(IUserOwned).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var userIdProperty = Expression.Property(parameter, nameof(IUserOwned.UserId));
+
+                var currentUserId = Expression.Constant(_currentUser.Id ?? Guid.Empty);
+
+                var body = Expression.Equal(userIdProperty, currentUserId);
+
+                var lambda = Expression.Lambda(body, parameter);
+
+                entityType.SetQueryFilter(lambda);
+            }
+        }
+
     }
 }
 
