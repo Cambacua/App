@@ -1,8 +1,4 @@
-import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root',
-})
-export class City {
-  
+export interface City {
+  name: string;
+  country: string;
 }
