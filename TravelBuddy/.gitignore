@@ -272,3 +272,17 @@ src/TravelBuddy.Blazor.Server.Tiered/Logs/*
 # IdentityServer temp files
 tempkey.rsa
 tempkey.jwk
+
+# Ignorar configuraciones locales de la app
+**/appsettings.json
+**/appsettings.Development.json
+
+# Ignorar node_modules
+**/node_modules/
+
+# Ignorar bin/obj
+**/bin/
+**/obj/
+
+# Ignorar logs
+*.log
