@@ -1,0 +1,43 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #92afee;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  gap: 2rem;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  white-space: nowrap;
+}
+
+.search-container {
+  flex-grow: 1;
+  max-width: 500px;
+}
+
+.nav {
+  white-space: nowrap;
+}
+
+/* Ajusta el buscador para el header */
+.search-container .container {
+  margin: 0;
+  max-width: none;
+}
+
+.search-container .search-box {
+  margin-bottom: 0;
+}
+
+.search-container input {
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.search-container button {
+  padding: 10px 20px;
+}

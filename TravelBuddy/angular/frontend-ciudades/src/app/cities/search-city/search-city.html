@@ -1,1 +1,23 @@
-<p>search-city works!</p>
+<div class="container">
+  <div class="search-box">
+    <input 
+      type="text"
+      [formControl]="search"
+      placeholder="Ingresá el nombre de la ciudad"
+    />
+
+    <button (click)="onSearch()">Buscar2</button>
+  </div>
+
+  <div class="results" *ngIf="cities.length > 0">
+    <h3>Resultados:</h3>
+    <ul>
+      <li *ngFor="let c of cities">
+        {{ c.name }} - {{ c.country }}
+      </li>
+    </ul>
+  </div>
+
+  <p *ngIf="loading">Buscando...</p>
+  <p *ngIf="error">{{ error }}</p>
+</div>

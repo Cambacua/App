@@ -1,12 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { SearchCityComponent } from './cities/search-city/search-city';
+import { HttpClientModule } from '@angular/common/http'; 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [
+    RouterOutlet, 
+    SearchCityComponent,
+    HttpClientModule 
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('frontend-ciudades');
+  title = 'Mi App de Ciudades';
 }

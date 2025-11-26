@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CityService } from '../city.service';
 import { CommonModule } from '@angular/common';
-import { City } from '../city';
+import { City } from '../city'; 
 
 @Component({
   selector: 'app-search-city',
