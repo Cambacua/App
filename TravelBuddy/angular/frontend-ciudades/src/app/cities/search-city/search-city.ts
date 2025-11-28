@@ -11,6 +11,9 @@ import { City } from '../city';
   templateUrl: './search-city.html',
   styleUrls: ['./search-city.css'],
 })
+/*export interface CitySearchResponse {
+  cities: City[]; 
+}*/
 export class SearchCityComponent {
 
   search = new FormControl('');

@@ -1,0 +1,14 @@
+<div class="container">
+  <h2>Destinos Disponibles</h2>
+
+  <div class="destinations">
+    <div class="card" *ngFor="let dest of destinations">
+      
+      <img [src]="dest.imageUrl" alt="{{dest.name}}">
+
+      <h3>{{ dest.name }}</h3>
+      <p>{{ dest.description }}</p>
+
+    </div>
+  </div>
+</div>

@@ -9,6 +9,7 @@ using TravelBuddy.Cities;
 using Microsoft.Extensions.DependencyInjection;
 
 
+
 namespace TravelBuddy
 {
     // La clase debe HEREDAR de AbpModule y tener sus llaves de inicio/fin
@@ -29,6 +30,8 @@ namespace TravelBuddy
             {
                 options.AddMaps<TravelBuddyApplicationModule>();
             });
+            var configuration = context.Services.GetConfiguration();
+            context.Services.Configure<GeoDbOptions>(configuration.GetSection("GeoDb"));
 
             // Esto configura la inyección de dependencia para HttpClient
             context.Services.AddHttpClient<ICitySearchService, GeoDbCitySearchService>();

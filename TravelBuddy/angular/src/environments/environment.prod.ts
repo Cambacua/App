@@ -20,7 +20,7 @@ export const environment = {
   oAuthConfig,
   apis: {
     default: {
-      url: 'https://localhost:44388',
+      url: 'https://localhost:app-search-city8',
       rootNamespace: 'TravelBuddy',
     },
     AbpAccountPublic: {

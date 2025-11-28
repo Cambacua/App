@@ -31,11 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.json" />
-    <Content Include="appsettings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Remove="appsettings.secrets.json" />
     <Content Include="appsettings.secrets.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

@@ -5,15 +5,13 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CityService {
+export class DestinationService {
 
-  private apiUrl = 'https://localhost:4200/api/app/cities/search';
+  private apiUrl = 'https://localhost:4200/api/app/destination';
 
   constructor(private http: HttpClient) {}
 
-  search(name: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}?name=${name}`);
+  getDestinations(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 }
-
-

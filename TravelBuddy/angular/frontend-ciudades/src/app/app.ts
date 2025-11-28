@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SearchCityComponent } from './cities/search-city/search-city';
-import { HttpClientModule } from '@angular/common/http'; 
+import { DestinationListComponent } from './Destinos/destination-list';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, 
+    RouterOutlet,
     SearchCityComponent,
-    HttpClientModule 
+    DestinationListComponent  
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   title = 'Mi App de Ciudades';

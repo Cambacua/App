@@ -8,6 +8,6 @@ namespace TravelBuddy.Cities
 {
     public class CitySearchResultDto
     {
-        public List<CityDto> Cities { get; set; } = new();
-    }
+    public List<CityDto> Cities { get; set; } = new();
+}
 }

@@ -17,7 +17,7 @@ public class CitiesController : TravelBuddyController
     [HttpGet("search")]
     public Task<CitySearchResultDto> SearchAsync([FromQuery] string name)
     {
-        var request = new CitySearchRequestDto { PartialName = name };
+        var request = new CitySearchRequestDto { Name = name };
         return _service.SearchCitiesByNameAsync(request);
     }
 }
