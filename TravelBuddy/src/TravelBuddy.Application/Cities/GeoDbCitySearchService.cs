@@ -136,7 +136,8 @@ namespace TravelBuddy.Cities
         public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
         {
             // GeoNames endpoint
-            var url = $"{_options.BaseUrl}?q={request.Name}&maxRows=10&username={_options.ApiKey}";
+            var url = $"{_options.BaseUrl}?name={request.Name}&maxRows=10&username={_options.Username}";
+
 
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();

@@ -6,14 +6,15 @@
       placeholder="Ingresá el nombre de la ciudad"
     />
 
-    <button (click)="onSearch()">Buscar2</button>
+    <button (click)="onSearch()">Buscar</button>
   </div>
 
   <div class="results" *ngIf="cities.length > 0">
     <h3>Resultados:</h3>
     <ul>
       <li *ngFor="let c of cities">
-        {{ c.name }} - {{ c.country }}
+       {{ c.name }} - {{ c.countryName }} ({{ c.countryCode }})
+
       </li>
     </ul>
   </div>

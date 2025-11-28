@@ -1,16 +1,13 @@
-import { TestBed } from '@angular/core/testing';
-
 import { City } from './city';
 
-describe('City', () => {
-  let service: City;
+describe('City model', () => {
+  let model: City;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(City);
+    model = new City();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should create an instance', () => {
+    expect(model).toBeTruthy();
   });
 });
