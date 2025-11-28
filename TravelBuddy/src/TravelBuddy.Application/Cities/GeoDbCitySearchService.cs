@@ -109,10 +109,11 @@ namespace TravelBuddy.Cities
         }
     }
 }*/
-using Microsoft.Extensions.Options;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
+using System.Text.Json;
+using Microsoft.Extensions.Options;
+using TravelBuddy.Cities;
 
 namespace TravelBuddy.Cities
 {
@@ -128,14 +129,14 @@ namespace TravelBuddy.Cities
             _httpClient = httpClient;
             _options = options.Value;
 
-            // GeoNames no usa headers → los limpiamos
             _httpClient.DefaultRequestHeaders.Clear();
+
         }
 
         public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
         {
             // GeoNames endpoint
-            var url = $"{_options.BaseUrl}?name_startsWith={request.Name}&maxRows=10&username={_options.ApiKey}";
+            var url = $"{_options.BaseUrl}?q={request.Name}&maxRows=10&username={_options.ApiKey}";
 
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();

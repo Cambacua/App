@@ -36,6 +36,7 @@ export class SearchCityComponent {
 
     this.cityService.search(value).subscribe({
       next: (response) => {
+        console.log("RESPONSE DEL BACKEND:", response); 
         this.cities = response.cities;
         this.loading = false;
       },

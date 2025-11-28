@@ -3,11 +3,13 @@
 
   <div class="destinations">
     <div class="card" *ngFor="let dest of destinations">
-      
-      <img [src]="dest.imageUrl" alt="{{dest.name}}">
 
-      <h3>{{ dest.name }}</h3>
-      <p>{{ dest.description }}</p>
+      <img [src]="dest.imagenUrl" alt="{{ dest.nombre }}">
+
+      <h3>{{ dest.nombre }}</h3>
+      <p>{{ dest.descripcion }}</p>
+      <p><strong>Ubicación:</strong> {{ dest.ubicacion }}</p>
+      <p><strong>Precio:</strong> ${{ dest.precio }}</p>
 
     </div>
   </div>

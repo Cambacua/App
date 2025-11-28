@@ -1,41 +1,8 @@
-﻿/*using System;
-using System.Threading.Tasks;
-using TravelBuddy.Cities;
-using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Users;
-
-namespace TravelBuddy.Destinations
-{
-    public class DestinationAppService :
-       CrudAppService<
-           Destination,
-           DestinationDto,
-           Guid,
-           Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,IDestinationAppService>
-    {
-        private readonly ICitySearchService _citySearchService;
-        private readonly ICurrentUser _currentUser;
-
-        public DestinationAppService(
-            IRepository<Destination, Guid> repository,
-            ICitySearchService citySearchService)
-            : base(repository)
-        {
-            _citySearchService = citySearchService;
-        }
-
-        public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
-        {
-            var user = _currentUser;
-            return await _citySearchService.SearchCitiesByNameAsync(request);
-        }
-    }
-}*/
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using TravelBuddy.Destinations;
 
 namespace TravelBuddy.Destinations
 {
@@ -43,6 +10,7 @@ namespace TravelBuddy.Destinations
     {
         public async Task<List<DestinationDto>> GetAllAsync()
         {
+            // Simulación de datos (mock)
             return new List<DestinationDto>
             {
                 new DestinationDto
@@ -53,11 +21,7 @@ namespace TravelBuddy.Destinations
                     Ubicacion = "Francia",
                     Precio = 1500,
                     ImagenUrl = "https://picsum.photos/400/200?random=1",
-                    Disponible = true,
-                    FechaCreacion = DateTime.Now,
-                    FechaActualizacion = DateTime.Now,
-                    CategoriaId = Guid.NewGuid(),
-                    CategoriaName = "Europa"
+                    Disponible = true
                 },
                 new DestinationDto
                 {
@@ -67,11 +31,7 @@ namespace TravelBuddy.Destinations
                     Ubicacion = "Inglaterra",
                     Precio = 1800,
                     ImagenUrl = "https://picsum.photos/400/200?random=2",
-                    Disponible = true,
-                    FechaCreacion = DateTime.Now,
-                    FechaActualizacion = DateTime.Now,
-                    CategoriaId = Guid.NewGuid(),
-                    CategoriaName = "Europa"
+                    Disponible = true
                 },
                 new DestinationDto
                 {
@@ -81,11 +41,7 @@ namespace TravelBuddy.Destinations
                     Ubicacion = "Argentina",
                     Precio = 900,
                     ImagenUrl = "https://picsum.photos/400/200?random=3",
-                    Disponible = true,
-                    FechaCreacion = DateTime.Now,
-                    FechaActualizacion = DateTime.Now,
-                    CategoriaId = Guid.NewGuid(),
-                    CategoriaName = "Sudamérica"
+                    Disponible = true
                 }
             };
         }

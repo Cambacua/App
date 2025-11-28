@@ -15,10 +15,9 @@ export class DestinationListComponent implements OnInit {
   destinations: any[] = [];
 
   constructor(private destinationService: DestinationService) {}
-
-  ngOnInit() {
-    this.destinationService.getDestinations().subscribe(data => {
-      this.destinations = data;
-    });
-  }
+ngOnInit() {
+  this.destinationService.getDestinations().subscribe((data) => {
+    this.destinations = data;
+  })};
 }
+

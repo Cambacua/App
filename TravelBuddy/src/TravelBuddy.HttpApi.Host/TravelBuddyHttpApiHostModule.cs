@@ -183,7 +183,7 @@ public class TravelBuddyHttpApiHostModule : AbpModule
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.ConventionalControllers.Create(typeof(TravelBuddyApplicationModule).Assembly);
+           // options.ConventionalControllers.Create(typeof(TravelBuddyApplicationModule).Assembly);
         });
     }
 
