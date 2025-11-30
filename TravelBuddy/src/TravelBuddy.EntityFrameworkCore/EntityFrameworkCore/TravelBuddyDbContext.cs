@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq.Expressions;
+using TravelBuddy.Destinations;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -9,9 +12,10 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.OpenIddict.EntityFrameworkCore;
+using Volo.Abp.Users;
 
 namespace TravelBuddy.EntityFrameworkCore;
 
@@ -23,8 +27,8 @@ public class TravelBuddyDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
-    public DbSet<Destinations.Destination> Destinations { get; set; }
-
+    public DbSet<Destination> Destinations { get; set; }
+    public DbSet<DestinationRating> DestinationRatings { get; set; }
 
     #region Entities from the modules
 
@@ -51,11 +55,16 @@ public class TravelBuddyDbContext :
 
     #endregion
 
-    public TravelBuddyDbContext(DbContextOptions<TravelBuddyDbContext> options)
+    private readonly ICurrentUser _currentUser;
+
+    public TravelBuddyDbContext(
+        DbContextOptions<TravelBuddyDbContext> options,
+        ICurrentUser currentUser)
         : base(options)
     {
-
+        _currentUser = currentUser;
     }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -71,9 +80,9 @@ public class TravelBuddyDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
-        builder.Entity<Destinations.Destination>(b =>
+        builder.Entity<Destination>(b =>
         {
             b.ToTable(TravelBuddyConsts.DbTablePrefix + "Destinations", TravelBuddyConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
@@ -83,15 +92,41 @@ public class TravelBuddyDbContext :
             b.Property(x => x.Precio).HasColumnType("decimal(18,2)");
             b.Property(x => x.ImagenUrl).HasMaxLength(1000);
             b.Property(x => x.Disponible).IsRequired();
+            b.Property(x => x.FechaCreacion).IsRequired();
+            b.Property(x => x.FechaActualizacion).IsRequired();
+            /*b.HasMany(x => x.Reservas).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
+            /*b.HasMany(x => x.Comentarios).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
+            //b.HasMany(x => x.Calificaciones).WithOne().HasForeignKey("DestinationId").OnDelete(DeleteBehavior.Cascade);*/
             // Configure other properties and relationships as needed
         });
+        builder.Entity<DestinationRating>(b =>
+        {
+            b.ToTable(TravelBuddyConsts.DbTablePrefix + "DestinationRatings", TravelBuddyConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Calificacion).IsRequired();
+            b.Property(x => x.Comentario).HasMaxLength(500);
+            b.Property(x => x.DestinationId).IsRequired();
+            b.Property(x => x.UserId).IsRequired();
+        });
 
+        // Filtro global para todas las entidades que implementen IUserOwned
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            if (typeof(IUserOwned).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var userIdProperty = Expression.Property(parameter, nameof(IUserOwned.UserId));
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(TravelBuddyConsts.DbTablePrefix + "YourEntities", TravelBuddyConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+                var currentUserId = Expression.Constant(_currentUser.Id ?? Guid.Empty);
+
+                var body = Expression.Equal(userIdProperty, currentUserId);
+
+                var lambda = Expression.Lambda(body, parameter);
+
+                entityType.SetQueryFilter(lambda);
+            }
+        }
+
     }
 }
+

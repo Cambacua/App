@@ -14,7 +14,7 @@ using Volo.Abp.Uow;
 namespace TravelBuddy.EntityFrameworkCore;
 
 [DependsOn(
-    typeof(TravelBuddyApplicationTestModule),
+    typeof(TravelBuddyApplicationModule),
     typeof(TravelBuddyEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCoreSqliteModule)
 )]
@@ -29,15 +29,21 @@ public class TravelBuddyEntityFrameworkCoreTestModule : AbpModule
             options.SaveStaticFeaturesToDatabase = false;
             options.IsDynamicFeatureStoreEnabled = false;
         });
+
         Configure<PermissionManagementOptions>(options =>
         {
             options.SaveStaticPermissionsToDatabase = false;
             options.IsDynamicPermissionStoreEnabled = false;
         });
+
         context.Services.AddAlwaysDisableUnitOfWorkTransaction();
 
-        ConfigureInMemorySqlite(context.Services);
+        context.Services.AddAbpDbContext<TravelBuddyDbContext>(options =>
+        {
+            options.AddDefaultRepositories(includeAllEntities: true);
+        });
 
+        ConfigureInMemorySqlite(context.Services);
     }
 
     private void ConfigureInMemorySqlite(IServiceCollection services)

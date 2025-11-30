@@ -27,7 +27,6 @@ namespace TravelBuddy.Destinations
         public string ImagenUrl { get; set; }
 
         public bool Disponible { get; set; }
-
-        public Guid CategoriaId { get; set; }
+        
     }
 }

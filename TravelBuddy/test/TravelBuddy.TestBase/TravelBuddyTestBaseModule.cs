@@ -6,6 +6,7 @@ using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Data;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
+using Volo.Abp.Uow;
 
 namespace TravelBuddy;
 
@@ -25,11 +26,15 @@ public class TravelBuddyTestBaseModule : AbpModule
         });
 
         context.Services.AddAlwaysAllowAuthorization();
+
+        // Deshabilita permisos dinámicos (las clases auxiliares están en TravelBuddyApplicationTestModule)
+        //context.Services.AddAlwaysDisablePermissionManagementForTests();
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
-        SeedTestData(context);
+        // Comenta seeding para evitar permisos
+        // SeedTestData(context);
     }
 
     private static void SeedTestData(ApplicationInitializationContext context)
@@ -45,3 +50,6 @@ public class TravelBuddyTestBaseModule : AbpModule
         });
     }
 }
+
+
+
