@@ -1,4 +1,5 @@
 <div class="container">
+
   <div class="search-box">
     <input 
       type="text"
@@ -6,19 +7,28 @@
       placeholder="Ingresá el nombre de la ciudad"
     />
 
-    <button (click)="onSearch()">Buscar</button>
+    <!-- Boton opcional -->
+    <button (click)="onSearch()" [disabled]="loading">Buscar</button>
   </div>
 
-  <div class="results" *ngIf="cities.length > 0">
+  <p *ngIf="loading">Buscando...</p>
+  <p *ngIf="error" class="error">{{ error }}</p>
+
+  <!-- Si hay resultados -->
+  <div class="results" *ngIf="cities.length > 0 && !loading">
     <h3>Resultados:</h3>
     <ul>
       <li *ngFor="let c of cities">
-       {{ c.name }} - {{ c.countryName }} ({{ c.countryCode }})
-
+        {{ c.name }} - {{ c.countryName }} ({{ c.countryCode }})
       </li>
     </ul>
   </div>
 
-  <p *ngIf="loading">Buscando...</p>
-  <p *ngIf="error">{{ error }}</p>
+  <!-- No resultados -->
+  <p *ngIf="!loading && cities.length === 0 && search.value">No se encontraron ciudades</p>
+
+  <p *ngIf="!auth.isAuthenticated()">
+  Debes iniciar sesión para buscar ciudades.
+  </p>
+
 </div>

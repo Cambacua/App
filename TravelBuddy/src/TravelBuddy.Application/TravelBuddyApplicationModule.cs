@@ -5,6 +5,7 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
+using Volo.Abp.PermissionManagement;
 using TravelBuddy.Cities;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,8 +20,7 @@ namespace TravelBuddy
         typeof(AbpPermissionManagementApplicationModule),
         typeof(AbpFeatureManagementApplicationModule),
         typeof(AbpIdentityApplicationModule),
-        typeof(AbpAccountApplicationModule),
-        typeof(AbpSettingManagementApplicationModule)
+        typeof(AbpAccountApplicationModule)
     )]
     public class TravelBuddyApplicationModule : AbpModule // <-- Clase de Módulo
     {

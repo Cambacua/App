@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SearchCityComponent } from './cities/search-city/search-city';
 import { DestinationListComponent } from './Destinos/destination-list';
+import { LoginComponent } from './auth/login.component';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,8 @@ import { DestinationListComponent } from './Destinos/destination-list';
   imports: [
     RouterOutlet,
     SearchCityComponent,
-    DestinationListComponent  
+    DestinationListComponent,
+    LoginComponent  
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']

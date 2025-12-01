@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TravelBuddy.Cities;
 
 namespace TravelBuddy.Controllers;
 
 [Route("api/app/cities")]
+
+[Authorize] 
+
+//Con esto, si NO hay token 401. Con token funciona
 public class CitiesController : TravelBuddyController
 {
     private readonly ICitySearchService _service;
