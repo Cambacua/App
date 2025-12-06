@@ -27,7 +27,7 @@ export class LoginComponent {
         console.log("LOGIN RESULT:", result);
 
         this.auth.setToken(result.accessToken);
-        alert("Login exitoso. Token guardado.");
+        //alert("Login exitoso. Token guardado.");
       },
       error: () => {
         this.error = 'Usuario o contraseña incorrectos';

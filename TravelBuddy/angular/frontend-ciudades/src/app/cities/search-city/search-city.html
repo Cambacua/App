@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
 
   <div class="search-box">
     <input 
@@ -7,14 +7,14 @@
       placeholder="Ingresá el nombre de la ciudad"
     />
 
-    <!-- Boton opcional -->
+     Boton opcional 
     <button (click)="onSearch()" [disabled]="loading">Buscar</button>
   </div>
 
   <p *ngIf="loading">Buscando...</p>
   <p *ngIf="error" class="error">{{ error }}</p>
 
-  <!-- Si hay resultados -->
+   Si hay resultados 
   <div class="results" *ngIf="cities.length > 0 && !loading">
     <h3>Resultados:</h3>
     <ul>
@@ -24,11 +24,52 @@
     </ul>
   </div>
 
-  <!-- No resultados -->
+   No resultados 
   <p *ngIf="!loading && cities.length === 0 && search.value">No se encontraron ciudades</p>
 
   <p *ngIf="!auth.isAuthenticated()">
   Debes iniciar sesión para buscar ciudades.
+  </p>
+
+</div> -->
+<div class="container">
+
+  <!-- Mensaje si no está logueado -->
+  <p *ngIf="!auth.isAuthenticated()" class="auth-warning">
+    Debes iniciar sesión para buscar ciudades.
+  </p>
+
+  <div class="search-box">
+    <input
+      type="text"
+      [formControl]="search"
+      placeholder="Ingresá el nombre de la ciudad"
+     
+      [disabled]="!auth.isAuthenticated() || loading"  
+    />
+
+    <button
+      (click)="onSearch()"
+      [disabled]="!auth.isAuthenticated() || loading"  
+    >
+      Buscar
+    </button>
+  </div>
+
+  <p *ngIf="loading">Buscando...</p>
+  <p *ngIf="error" class="error">{{ error }}</p>
+
+  <div class="results" *ngIf="cities.length > 0 && !loading">
+    <h3>Resultados:</h3>
+    <ul>
+      <li *ngFor="let c of cities">
+        {{ c.name }} - {{ c.countryName }} ({{ c.countryCode }})
+      </li>
+    </ul>
+  </div>
+
+  <p *ngIf="!loading && cities.length === 0 && search.value">
+    No se encontraron ciudades
   </p>
 
 </div>

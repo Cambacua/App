@@ -1,0 +1,57 @@
+/* Contenedor principal del login */
+.login-container {
+  width: 350px;
+  margin: 80px auto;                /* separa del borde y centra */
+  padding: 25px;                    /* espacio interno */
+  background-color: #f7f7f7;        /* ⭐ color de fondo del cuadro */
+  border: 1px solid #ccc;           /* ⭐ color y grosor del borde */
+  border-radius: 12px;              /* ⭐ redondeo de bordes */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* sombra alrededor */
+  text-align: center;
+}
+
+/* Título */
+.login-container h2 {
+  margin-bottom: 50px;              /* separación hacia abajo */
+}
+
+/* Inputs de texto */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 50px;              /* ⭐ separación entre inputs */
+  border: 1px solid #aaa;           /* ⭐ color del borde del input */
+  border-radius: 6px;               /* redondeo */
+  background-color: #fff;           /* ⭐ fondo de los inputs */
+}
+
+/* Checkbox (se deja normal) */
+.login-container label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;              /* separación debajo */
+}
+
+/* Botón */
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;        /* ⭐ color de fondo del botón */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.login-container button:hover {
+  background-color: #0056b3;        /* tono más oscuro */
+}
+
+/* Error */
+.error {
+  margin-top: 10px;
+  color: red;
+  font-weight: bold;
+}
