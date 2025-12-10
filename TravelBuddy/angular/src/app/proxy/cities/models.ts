@@ -6,7 +6,7 @@ export interface CityDto {
 
 export interface CitySearchRequestDto {
   partialName?: string;
-  pais?: string;
+
 }
 
 export interface CitySearchResultDto {

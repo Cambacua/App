@@ -10,7 +10,7 @@ namespace TravelBuddy.Cities
     //formato de datos que la API va a devolver al front
     {
         public string PartialName { get; set; }
-        public string Pais { get; set; }
+
 
     }
 }

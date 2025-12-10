@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -29,24 +30,42 @@ namespace TravelBuddy.Cities
             httpRequest.Headers.Add("X-RapidAPI-Key", apiKey);
             httpRequest.Headers.Add("X-RapidAPI-Host", apiHost);
 
-            var response = await _httpClient.SendAsync(httpRequest);
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            var doc = JsonDocument.Parse(json);
-
-            var result = new CitySearchResultDto();
-
-            foreach (var city in doc.RootElement.GetProperty("data").EnumerateArray())
+            try
             {
-                result.Cities.Add(new CityDto
+                var response = await _httpClient.SendAsync(httpRequest);
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json);
+
+                var result = new CitySearchResultDto();
+
+                if (doc.RootElement.TryGetProperty("data", out var dataElement) && dataElement.ValueKind == JsonValueKind.Array)
                 {
-                    Name = city.GetProperty("city").GetString(),
-                    Country = city.GetProperty("country").GetString()
-                });
+                    foreach (var city in dataElement.EnumerateArray())
+                    {
+                        var name = city.GetProperty("city").GetString();
+                        var country = city.TryGetProperty("country", out var countryProp) ? countryProp.GetString() : "Unknown";
+
+                        result.Cities.Add(new CityDto
+                        {
+                            Name = name,
+                            Country = country
+                        });
+                    }
+                }
+
+                return result;
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"[API ERROR] {ex.Message}");
+                // In a real app, log the error: _logger.LogError(ex, "Error fetching cities");
+                // Return empty result instead of crashing
+                return new CitySearchResultDto();
             }
 
-            return result;
+
         }
     }
 }

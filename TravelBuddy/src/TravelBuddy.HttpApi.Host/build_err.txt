@@ -1,0 +1,28 @@
+  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos están actualizados para la restauración.
+  TravelBuddy.Domain.Shared -> C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Domain.Shared\bin\Debug\net9.0\TravelBuddy.Domain.Shared.dll
+  TravelBuddy.Domain -> C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Domain\bin\Debug\net9.0\TravelBuddy.Domain.dll
+  TravelBuddy.EntityFrameworkCore -> C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.EntityFrameworkCore\bin\Debug\net9.0\TravelBuddy.EntityFrameworkCore.dll
+  TravelBuddy.Application.Contracts -> C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application.Contracts\bin\Debug\net9.0\TravelBuddy.Application.Contracts.dll
+  TravelBuddy.HttpApi -> C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.HttpApi\bin\Debug\net9.0\TravelBuddy.HttpApi.dll
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Destinations\DestinationAppService.cs(23,16): warning CS8618: El elemento campo "_currentUser" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el campo como un valor que acepta valores NULL. [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(66,20): error CS0103: El nombre 'result' no existe en el contexto actual [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(51,36): warning CS8601: Posible asignación de referencia nula. [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(52,39): warning CS8601: Posible asignación de referencia nula. [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(66,13): warning CS0162: Se detectó código inaccesible [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(59,37): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Destinations\DestinationAppService.cs(21,39): warning CS0649: El campo 'DestinationAppService._currentUser' nunca se asigna y siempre tendrá el valor predeterminado null [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+
+ERROR al compilar.
+
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Destinations\DestinationAppService.cs(23,16): warning CS8618: El elemento campo "_currentUser" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el campo como un valor que acepta valores NULL. [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(51,36): warning CS8601: Posible asignación de referencia nula. [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(52,39): warning CS8601: Posible asignación de referencia nula. [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(66,13): warning CS0162: Se detectó código inaccesible [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(59,37): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Destinations\DestinationAppService.cs(21,39): warning CS0649: El campo 'DestinationAppService._currentUser' nunca se asigna y siempre tendrá el valor predeterminado null [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\Cities\GeoDbCitySearchService.cs(66,20): error CS0103: El nombre 'result' no existe en el contexto actual [C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.Application\TravelBuddy.Application.csproj]
+    6 Advertencia(s)
+    1 Errores
+
+Tiempo transcurrido 00:00:04.47
