@@ -1,0 +1,41 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2>Buscador de Ciudades</h2>
+    </div>
+    <div class="card-body">
+      <div class="form-group mb-3">
+        <label for="citySearch" class="form-label">Buscar ciudad por nombre:</label>
+        <input
+          id="citySearch"
+          type="text"
+          class="form-control"
+          [formControl]="searchControl"
+          placeholder="Escriba el nombre de una ciudad..."
+        />
+      </div>
+
+      <div *ngIf="isLoading" class="d-flex align-items-center mb-3">
+        <div class="spinner-border text-primary me-2" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <span>Buscando...</span>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="results.length > 0" class="list-group">
+        <div *ngFor="let city of results" class="list-group-item">
+          <h5 class="mb-1">{{ city.name }}</h5>
+          <p class="mb-1 text-muted">{{ city.country }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && !errorMessage && results.length === 0 && searchControl.value && searchControl.value.length > 0" class="alert alert-warning">
+        No se encontraron resultados para "{{ searchControl.value }}"
+      </div>
+    </div>
+  </div>
+</div>
