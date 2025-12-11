@@ -22,5 +22,6 @@ export const APP_ROUTES: Routes = [
   {
     path: 'search-city',
     loadComponent: () => import('./search-city/search-city.component').then(c => c.SearchCityComponent),
+    canActivate: [authGuard],
   },
 ];
