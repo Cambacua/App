@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +11,17 @@ using Volo.Abp.Users;
 
 namespace TravelBuddy.Destinations
 {
+    [Authorize]
     public class DestinationAppService :
        CrudAppService<
            Destination,
            DestinationDto,
            Guid,
-           Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,IDestinationAppService>
+           Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto,
+           CreateUpdateDestinationDto>,
+       IDestinationAppService
     {
         private readonly ICitySearchService _citySearchService;
-        private readonly ICurrentUser _currentUser;
 
         public DestinationAppService(
             IRepository<Destination, Guid> repository,
@@ -30,7 +33,6 @@ namespace TravelBuddy.Destinations
 
         public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
         {
-            var user = _currentUser;
             return await _citySearchService.SearchCitiesByNameAsync(request);
         }
     }

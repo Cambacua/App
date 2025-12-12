@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using TravelBuddy.Cities;
 
 namespace TravelBuddy.Destinations
 {
@@ -15,6 +16,6 @@ namespace TravelBuddy.Destinations
             PagedAndSortedResultRequestDto, //Used for paging/sorting
             CreateUpdateDestinationDto> //Used to create/update an entity
     {
-    
+        Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request);
     }
 }

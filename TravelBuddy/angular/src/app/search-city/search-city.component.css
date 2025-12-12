@@ -1,4 +1,44 @@
+.custom-page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.custom-header {
+  background-color: #021335;
+  /* Strong Blue like image */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.custom-body {
+  background-color: #dbe4ef;
+  /* Light gray-celeste background */
+  flex-grow: 1;
+}
+
+.search-container input {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+}
+
+.card {
+  transition: transform 0.2s;
+  background-color: rgb(243, 232, 232);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
 .spinner-border {
   width: 1.5rem;
   height: 1.5rem;
+}
+
+.search-results-dropdown {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
