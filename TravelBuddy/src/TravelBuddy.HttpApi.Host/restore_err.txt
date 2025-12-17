@@ -1,0 +1,6 @@
+  Determinando los proyectos que se van a restaurar...
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.HttpApi.Host\TravelBuddy.HttpApi.Host.csproj : error NU1102: No se encuentra el paquete Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite con la versión (>= 9.3.2)
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.HttpApi.Host\TravelBuddy.HttpApi.Host.csproj : error NU1102:   - Versiones encontradas en nuget.org: 137 [ versión más cercana: 5.0.1 ]
+C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.HttpApi.Host\TravelBuddy.HttpApi.Host.csproj : error NU1102:   - No se tuvieron en cuenta las versiones de Microsoft Visual Studio Offline Packages
+  No se pudo restaurar C:\Users\HP\Desktop\repo02\TravelBuddy\src\TravelBuddy.HttpApi.Host\TravelBuddy.HttpApi.Host.csproj (en 2,62 s).
+  6 de 7 proyectos están actualizados para la restauración.

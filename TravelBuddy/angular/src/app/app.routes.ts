@@ -19,4 +19,9 @@ export const APP_ROUTES: Routes = [
     path: 'setting-management',
     loadChildren: () => import('@abp/ng.setting-management').then(c => c.createRoutes()),
   },
+  {
+    path: 'search-city',
+    loadComponent: () => import('./search-city/search-city.component').then(c => c.SearchCityComponent),
+    canActivate: [authGuard],
+  },
 ];

@@ -5,42 +5,37 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
-using Volo.Abp.PermissionManagement;
-using Volo.Abp.SettingManagement;
+using TravelBuddy.Cities;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TravelBuddy;
 
-[DependsOn(
-    typeof(TravelBuddyDomainModule),
-    typeof(AbpAutoMapperModule),
-    typeof(TravelBuddyApplicationContractsModule),
-    typeof(AbpPermissionManagementApplicationModule),
-    typeof(AbpFeatureManagementApplicationModule),
-    typeof(AbpIdentityApplicationModule),
-    typeof(AbpAccountApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
-    )]
-public class TravelBuddyApplicationModule : AbpModule
+namespace TravelBuddy
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    // La clase debe HEREDAR de AbpModule y tener sus llaves de inicio/fin
+    [DependsOn(
+        typeof(TravelBuddyDomainModule),
+        typeof(TravelBuddyApplicationContractsModule),
+        typeof(AbpPermissionManagementApplicationModule),
+        typeof(AbpFeatureManagementApplicationModule),
+        typeof(AbpIdentityApplicationModule),
+        typeof(AbpAccountApplicationModule),
+        typeof(AbpSettingManagementApplicationModule)
+    )]
+    public class TravelBuddyApplicationModule : AbpModule // <-- Clase de Módulo
     {
-        context.Services.AddTransient<IDestinationAppService, DestinationAppService>();
-
-        Configure<AbpAutoMapperOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context) // <-- Método dentro de la clase
         {
-            options.AddMaps<TravelBuddyApplicationModule>();
-        });
+            Configure<AbpAutoMapperOptions>(options =>
+            {
+                options.AddMaps<TravelBuddyApplicationModule>();
+            });
+
+            // Esto configura la inyección de dependencia para HttpClient
+            context.Services.AddHttpClient<ICitySearchService, GeoDbCitySearchService>();
+        }
     }
 
 }
 
-/*public class TravelBuddyApplicationModule : AbpModule
-{
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<TravelBuddyApplicationModule>();
-        });
-    }
-}*/
+
+

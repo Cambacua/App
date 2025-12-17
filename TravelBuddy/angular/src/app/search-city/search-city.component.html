@@ -1,0 +1,64 @@
+<div class="custom-page-container">
+  <!-- Custom Header -->
+  <div class="custom-header px-4 py-3 position-relative">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2 class="text-white m-0 fw-bold">Destinos</h2>
+      <div class="search-container d-flex position-relative">
+        <input type="text" class="form-control me-2" [formControl]="searchControl" placeholder="Buscar ciudades"
+          style="min-width: 300px;" />
+        <button class="btn btn-dark">Buscar</button>
+      </div>
+    </div>
+
+    <!-- Search Results Dropdown (Overlay) -->
+    <div *ngIf="isSearching || cityResults.length > 0 || searchError"
+      class="search-results-dropdown shadow rounded bg-white mt-2 p-2 position-absolute"
+      style="right: 25px; top: 60px; width: 380px; z-index: 1000;">
+
+      <div *ngIf="isSearching" class="d-flex align-items-center p-2 text-primary">
+        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+        <span>Buscando ciudades...</span>
+      </div>
+
+      <div *ngIf="searchError" class="alert alert-danger mb-0 p-2">
+        {{ searchError }}
+      </div>
+
+      <div *ngIf="cityResults.length > 0" class="list-group list-group-flush">
+        <button *ngFor="let city of cityResults" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1 fw-bold">{{ city.name }}</h6>
+            <small class="text-muted">{{ city.country }}</small>
+          </div>
+        </button>
+      </div>
+
+      <div
+        *ngIf="!isSearching && !searchError && cityResults.length === 0 && searchControl.value && searchControl.value.length > 0"
+        class="p-2 text-muted">
+        No se encontraron ciudades.
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Body (Always Visible) -->
+  <div class="custom-body p-4">
+    <h3 class="mb-4 fw-bold text-dark">Destinos Recomendados</h3>
+
+    <!-- Featured Destinations Grid (Static) -->
+    <div class="row g-4">
+      <div *ngFor="let dest of featuredDestinations" class="col-md-4">
+        <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+          <img [src]="dest.imagenUrl" class="card-img-top" alt="{{ dest.nombre }}"
+            style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">{{ dest.nombre }}</h5>
+            <p class="card-text text-dark">{{ dest.descripcion }}</p>
+            <p class="mb-1"><strong>Ubicación:</strong> {{ dest.ubicacion }}</p>
+            <p class="mb-0 fw-bold">Precio: ${{ dest.precio }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
