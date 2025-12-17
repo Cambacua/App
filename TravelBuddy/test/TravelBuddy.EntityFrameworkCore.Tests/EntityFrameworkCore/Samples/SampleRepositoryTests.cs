@@ -4,8 +4,10 @@ using Shouldly;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
 using Xunit;
+using TravelBuddy.EntityFrameworkCore;
 
-namespace TravelBuddy.EntityFrameworkCore.Samples;
+//namespace TravelBuddy.EntityFrameworkCore.Samples;
+namespace TravelBuddy;
 
 /* This is just an example test class.
  * Normally, you don't test ABP framework code

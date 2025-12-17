@@ -11,5 +11,9 @@ public class TravelBuddyApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
         CreateMap<Destinations.Destination, Destinations.DestinationDto>();
         CreateMap<Destinations.CreateUpdateDestinationDto, Destinations.Destination>();
+       
+        CreateMap<Destinations.DestinationRating, Destinations.DestinationRatingDto>();
+        CreateMap<Destinations.CreateDestinationRatingDto, Destinations.DestinationRating>();
     }
+
 }
