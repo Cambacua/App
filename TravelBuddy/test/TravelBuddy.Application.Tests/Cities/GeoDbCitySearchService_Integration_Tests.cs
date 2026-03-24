@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TravelBuddy.Cities;
@@ -28,7 +28,7 @@ namespace TravelBuddy.Application.Tests.Integration
         {
             var request = new CitySearchRequestDto { PartialName = "Buenos" };
 
-            var result = await _service.SearchCitiesByNameAsync(request);
+            var result = await _service.SearchCitiesAsync(request);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result.Cities);
@@ -41,7 +41,7 @@ namespace TravelBuddy.Application.Tests.Integration
             await Task.Delay(3000); // espera 3 segundos para evitar límite (para las request a la api)
             var request = new CitySearchRequestDto { PartialName = "Xyzqwertycity" };
 
-            var result = await _service.SearchCitiesByNameAsync(request);
+            var result = await _service.SearchCitiesAsync(request);
 
             Assert.NotNull(result);
             Assert.Empty(result.Cities);

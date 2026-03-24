@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace TravelBuddy.Application.Tests.Cities
             var request = new CitySearchRequestDto { PartialName = "Rio" };
 
             // Act
-            var result = await _service.SearchCitiesByNameAsync(request);
+            var result = await _service.SearchCitiesAsync(request);
 
             // Assert
             Assert.NotNull(result); //Verifica CitySearchResultDto no sea nulo.

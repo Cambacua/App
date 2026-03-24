@@ -1,4 +1,4 @@
-﻿using Moq;
+using Moq;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,11 +34,11 @@ namespace TravelBuddy.Application.Tests.Destinations
             
             //simula la llamada http real
             _citySearchServiceMock
-                .Setup(s => s.SearchCitiesByNameAsync(request))
+                .Setup(s => s.SearchCitiesAsync(request))
                 .ReturnsAsync(expected);
 
             // Act
-            var result = await _appService.SearchCitiesByNameAsync(request);
+            var result = await _appService.SearchCitiesAsync(request);
 
             // Assert
             Assert.NotNull(result);
@@ -53,10 +53,10 @@ namespace TravelBuddy.Application.Tests.Destinations
 
             //el setuo se configura para devolver un resultado vacio
             _citySearchServiceMock
-                .Setup(s => s.SearchCitiesByNameAsync(request))
+                .Setup(s => s.SearchCitiesAsync(request))
                 .ReturnsAsync(new CitySearchResultDto());
 
-            var result = await _appService.SearchCitiesByNameAsync(request);
+            var result = await _appService.SearchCitiesAsync(request);
 
             Assert.NotNull(result);
             Assert.Empty(result.Cities);
@@ -68,11 +68,11 @@ namespace TravelBuddy.Application.Tests.Destinations
             var request = new CitySearchRequestDto { PartialName = "ErrorCity" };
 
             _citySearchServiceMock
-                .Setup(s => s.SearchCitiesByNameAsync(request))
+                .Setup(s => s.SearchCitiesAsync(request))
                 .ThrowsAsync(new HttpRequestException("Simulated API failure")); //no devuelve error, lanza la excepcion de forma asincrona
 
             await Assert.ThrowsAsync<HttpRequestException>(() =>
-                _appService.SearchCitiesByNameAsync(request)
+                _appService.SearchCitiesAsync(request)
             );
         }
     }

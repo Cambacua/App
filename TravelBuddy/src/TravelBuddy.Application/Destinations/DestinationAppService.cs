@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,10 +28,20 @@ namespace TravelBuddy.Destinations
             _citySearchService = citySearchService;
         }
 
-        public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
+        public async Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request)
         {
             var user = _currentUser;
-            return await _citySearchService.SearchCitiesByNameAsync(request);
+            return await _citySearchService.SearchCitiesAsync(request);
+        }
+
+        public async Task<CityDetailDto> GetCityDetailsAsync(int cityId)
+        {
+            return await _citySearchService.GetCityDetailsAsync(cityId);
+        }
+
+        public async Task<CitySearchResultDto> GetPopularCitiesAsync()
+        {
+            return await _citySearchService.GetPopularCitiesAsync();
         }
     }
 }

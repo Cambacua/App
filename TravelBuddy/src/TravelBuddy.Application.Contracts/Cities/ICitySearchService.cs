@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +9,8 @@ namespace TravelBuddy.Cities
 {
     public interface ICitySearchService
     {
-        Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request);
+        Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request);
+        Task<CityDetailDto> GetCityDetailsAsync(int cityId);
+        Task<CitySearchResultDto> GetPopularCitiesAsync();
     }
 }
