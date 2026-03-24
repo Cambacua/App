@@ -24,6 +24,7 @@ public class TravelBuddyDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<Destinations.Destination> Destinations { get; set; }
+    public DbSet<Experiencias.Experiencia> Experiencias { get; set; }
 
 
     #region Entities from the modules
@@ -91,6 +92,13 @@ public class TravelBuddyDbContext :
             // Configure other properties and relationships as needed
         });
 
+        builder.Entity<Experiencias.Experiencia>(b =>
+        {
+            b.ToTable(TravelBuddyConsts.DbTablePrefix + "Experiencias", TravelBuddyConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Titulo).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Descripcion).IsRequired().HasMaxLength(1024);
+        });
 
         //builder.Entity<YourEntity>(b =>
         //{
